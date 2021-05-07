@@ -1,0 +1,33 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: customer
+  profiles:
+    active: production
+  datasource:
+    url: ${customer.datasource.url}
+    username: ${customer.datasource.username}
+    password: ${customer.datasource.password}
+  jpa:
+    database: ${customer.jpa.database}
+    show-sql: ${customer.jpa.show-sql}
+    hibernate:
+      ddl-auto: ${customer.jpa.hibernate.ddl-auto}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+info:
+  app:
+    name: "Customer"
+    version: "0.0.1"
+    profile: ${spring.profiles.active}
+  serverInfo:
+    port: ${server.port}
+
+application:
+  allow-get-customer: ${customer.allow-get-customer}
