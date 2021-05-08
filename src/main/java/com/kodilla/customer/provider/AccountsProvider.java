@@ -1,4 +1,4 @@
-package com.kodilla.customer.mapper;
+package com.kodilla.customer.provider;
 
 import com.kodilla.customer.connector.AccountsConnector;
 import com.kodilla.customer.domian.AccountDto;

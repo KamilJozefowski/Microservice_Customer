@@ -3,6 +3,7 @@ package com.kodilla.customer.controller;
 import com.kodilla.customer.domian.AccountDto;
 import com.kodilla.customer.domian.CustomerDto;
 import com.kodilla.customer.domian.GetCustomerProductsResponse;
+import com.kodilla.customer.provider.AccountsProvider;
 import com.kodilla.customer.mapper.CustomerMapper;
 import com.kodilla.customer.service.DbService;
 import com.kodilla.customer.service.ProductService;
@@ -31,6 +32,8 @@ public class CustomerController {
     private final DbService dbService;
     private final CustomerMapper customerMapper;
     private final ProductService productService;
+    private final AccountsProvider accountsProvider;
+    private List<AccountDto> accountDtoList;
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/{customerId}")
@@ -46,6 +49,8 @@ public class CustomerController {
     public GetCustomerProductsResponse getCustomerProducts(@PathVariable Long customerId) throws TaskNotFoundException {
         CustomerDto customerDto = customerMapper.mapToCustomerDto(dbService.getCustomer(customerId).orElseThrow(TaskNotFoundException::new));
 
+        accountDtoList = accountsProvider.getCustomerAccounts(customerId);
+        System.out.println(accountDtoList);
         List<AccountDto> customerAccounts = productService.findCustomerAccounts(customerId);
 
         return GetCustomerProductsResponse.builder()

@@ -1,7 +1,7 @@
 package com.kodilla.customer.service;
 
 import com.kodilla.customer.domian.AccountDto;
-import com.kodilla.customer.mapper.AccountsProvider;
+import com.kodilla.customer.provider.AccountsProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
