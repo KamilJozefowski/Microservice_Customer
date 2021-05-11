@@ -3,13 +3,13 @@ package com.kodilla.customer.domian;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+
 @Data
 @AllArgsConstructor
-public class AccountDto {
-
+public class CardsDto {
     private Long id;
     private Long customerId;
-    private String nrb;
-    private String currency;
-    private Double availableFunds;
+    private String name;
+    private Double creditValue;
+    private String cardNumber;
 }

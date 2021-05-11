@@ -19,6 +19,7 @@ public class AccountsProvider {
                 .stream()
                 .map(account -> new AccountDto(
                         account.getId(),
+                        account.getCustomerId(),
                         account.getNrb(),
                         account.getCurrency(),
                         account.getAvailableFunds()))

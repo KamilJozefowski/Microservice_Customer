@@ -1,10 +1,12 @@
 package com.kodilla.customer.controller;
 
 import com.kodilla.customer.domian.AccountDto;
+import com.kodilla.customer.domian.CardsDto;
 import com.kodilla.customer.domian.CustomerDto;
 import com.kodilla.customer.domian.GetCustomerProductsResponse;
-import com.kodilla.customer.provider.AccountsProvider;
 import com.kodilla.customer.mapper.CustomerMapper;
+import com.kodilla.customer.provider.AccountsProvider;
+import com.kodilla.customer.provider.CardsProvider;
 import com.kodilla.customer.service.DbService;
 import com.kodilla.customer.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -22,23 +24,21 @@ import java.util.List;
 @Slf4j
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(value = "/v1/customer", produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/v1/customer", produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
 public class CustomerController {
-
-    @Value("${application.allow-get-customer}")
-    private boolean allowGetCustomer;
 
     private final DbService dbService;
     private final CustomerMapper customerMapper;
     private final ProductService productService;
     private final AccountsProvider accountsProvider;
-    private List<AccountDto> accountDtoList;
-
+    private final CardsProvider cardsProvider;
+    @Value("${application.allow-get-customer}")
+    private boolean allowGetCustomer;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{customerId}")
     public CustomerDto getCustomer(@PathVariable Long customerId) throws TaskNotFoundException {
-        if(!allowGetCustomer){
+        if (!allowGetCustomer) {
             log.info("Getting customer is disabled.");
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Getting customer is disabled.");
         }
@@ -49,14 +49,14 @@ public class CustomerController {
     public GetCustomerProductsResponse getCustomerProducts(@PathVariable Long customerId) throws TaskNotFoundException {
         CustomerDto customerDto = customerMapper.mapToCustomerDto(dbService.getCustomer(customerId).orElseThrow(TaskNotFoundException::new));
 
-        accountDtoList = accountsProvider.getCustomerAccounts(customerId);
-        System.out.println(accountDtoList);
-        List<AccountDto> customerAccounts = productService.findCustomerAccounts(customerId);
+        List<AccountDto> customerAccounts = accountsProvider.getCustomerAccounts(customerId);
+        List<CardsDto> cardsDto = cardsProvider.getCustomerCards(customerId);
 
         return GetCustomerProductsResponse.builder()
                 .customerId(customerDto.getId())
                 .fullName(customerDto.getFirstName() + " " + customerDto.getLastName())
                 .accounts(customerAccounts)
+                .cards(cardsDto)
                 .build();
     }
 }
